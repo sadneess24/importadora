@@ -1,0 +1,65 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block tittle %}
+Administrar usuario
+{% endblock tittle %}
+{% block css %}
+<style class="text/css">
+.boton {
+            margin-right: 5px;
+        }
+        .centrado {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        table th, table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="container">
+  <h1 class="my-4 text-center">{{ title }}</h1>
+
+  <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+          <thead class="thead-dark">
+              <tr>
+                  <th>Nombre usuario</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Email</th>
+                  <th>Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for usuario in usuarios %}
+              <tr>
+                  <td>{{ usuario.username }}</td>
+                  <td>{{ usuario.first_name }}</td>
+                  <td>{{ usuario.last_name }}</td>
+                  <td>{{ usuario.email }}</td>
+                  <td>
+                      <a class="btn btn-primary btn-sm boton" href="{% url 'editar_usuario' usuario.id %}">Editar</a>
+                      <a class="btn btn-danger btn-sm boton" href="{% url 'eliminar_usuario' usuario.id %}">Eliminar</a>
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+  {% if user.is_authenticated and user.is_staff %}
+  <div class="centrado">
+      <a class="btn btn-secondary mr-2" href="{% url 'admin:index' %}">Vista administrador</a>
+      <a class="btn btn-success" href="#">Publicar Oferta</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

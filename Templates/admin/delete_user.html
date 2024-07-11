@@ -1,0 +1,13 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block tittle %}
+Eliminar usuario
+{% endblock tittle %}
+{% block content %}
+<h1>Eliminar Usuario</h1>
+<form method="post">
+  {% csrf_token %}
+  <p>¿Estás seguro de que deseas eliminar el usuario "{{ usuario.username }}"?</p>
+  <button type="submit">Eliminar</button>
+</form>
+{% enblock content %}

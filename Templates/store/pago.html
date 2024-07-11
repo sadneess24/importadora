@@ -1,0 +1,124 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block tittle %}
+Pago
+{% endblock tittle %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="row">
+            <aside class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Informacion de pago</h4>
+                        <form action="{% url 'realizar_pedido' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="">Nombre</label>
+                                    <input type="text" name="first_name" class="form-control" required>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="">Apellido</label>
+                                    <input type="text" name="last_name" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="">Numero de telefono</label>
+                                    <input type="text" name="phone" class="form-control" required>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="">Correo electronico</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="">Direccion de envio 1</label>
+                                    <input type="text" name="address_line_1" class="form-control" required>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="">Numero</label>
+                                    <input type="text" name="address_line_2" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="">País</label>
+                                    <input type="text" name="pais" class="form-control" required>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="">Region</label>
+                                    <input type="text" name="region" class="form-control" required>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="">Comuna</label>
+                                    <input type="text" name="comuna" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label for="">Notas de envio</label>
+                                <textarea name="nota_orden" rows="2" class="form-control"></textarea>
+                            </div>
+                        
+                    </div>
+                </div>
+            </aside>
+            <aside class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-borderless table-shopping-cart">
+                            <thead class="text-muted">
+                                <tr class="small text-uppercase">
+                                    <th scope="col">Producto</th>
+                                    <th scope="col" width="120">Cantidad</th>
+                                    <th scope="col" width="120">Precio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for carro_item in carro_items %}
+                                <tr>
+                                    <td>
+                                        <figure class="itemside align-items-center">
+                                            <div class="aside"><img src="{{carro_item.producto.imagen.url}}" class="img-sm"></div>
+                                            <figcaption class="info">
+                                                <a href="{{ carro_item.producto.obtener_url }}" class="title text-dark">{{carro_item.producto.nombre_producto}}</a>
+                                                <p class="text-muted small">
+                                                    Variaciones:
+                                                    <br>
+                                                    {% if carro_item.variaciones.all %}
+                                                    {% for item in carro_item.variaciones.all %}
+                                                    {{ item.categoria_variacion | capfirst }}: {{ item.valor_variacion | capfirst }}<br>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </p>
+                                            </figcaption>
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <label for="">{{carro_item.cantidad}}</label>
+                                    </td>
+                                    <td>
+                                        <div class="price-wrap">
+                                            <var class="price">${{carro_item.sub_total}}</var>
+                                            <small class="text-muted"> ${{carro_item.producto.precio}} </small>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <button type="submit" name="submit" class="btn btn-primary btn-block">Pagar</button>
+                        <a href="{% url 'tienda' %}" class="btn btn-light btn-block">Continuar comprando</a>
+                    </form>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

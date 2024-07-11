@@ -1,0 +1,175 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block tittle %}
+Tienda
+{% endblock tittle %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="card">
+            <div class="row no-gutters">
+                <aside class="col-md-6">
+                    <article class="gallery-wrap">
+                        <div class="img-big-wrap">
+                            <a href="#"><img src="{{ single_product.imagen.url }}"></a>
+                        </div>
+                    </article>
+                </aside>
+                <main class="col-md-6 border-left">
+                    <form action="{% url 'agregar_carro' single_product.id %}" method="GET">
+                        {% csrf_token %}
+                        <article class="content-body">
+                            <h2 class="title">{{ single_product.nombre_producto }}</h2>
+                            <div class="mb-3">
+                                <var class="price h4">${{ single_product.precio }}</var>
+                            </div>
+                            <p>{{ single_product.descripcion }}</p>
+                            <hr>
+                            {% if capacidad_variaciones %}
+                            <div class="row">
+                                <div class="item-option-select">
+                                    <h6>CAPACIDAD</h6>
+                                    <select name="capacity" class="form-control">
+                                        <option value="" disabled selected>capacidad</option>
+                                        {% for variacion in capacidad_variaciones %}
+                                        <option value="{{ variacion.valor_variacion }}">{{ variacion.valor_variacion|capfirst }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if tipo_variaciones %}
+                            <div class="row">
+                                <div class="item-option-select">
+                                    <h6>TIPO</h6>
+                                    <select name="type" class="form-control">
+                                        <option value="" disabled selected>tipo</option>
+                                        {% for variacion in tipo_variaciones %}
+                                        <option value="{{ variacion.valor_variacion }}">{{ variacion.valor_variacion|capfirst }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if largo_variaciones %}
+                            <div class="row">
+                                <div class="item-option-select">
+                                    <h6>LARGO</h6>
+                                    <select name="length" class="form-control">
+                                        <option value="" disabled selected>largo</option>
+                                        {% for variacion in largo_variaciones %}
+                                        <option value="{{ variacion.valor_variacion }}">{{ variacion.valor_variacion|capfirst }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if color_variaciones %}
+                            <div class="row">
+                                <div class="item-option-select">
+                                    <h6>COLOR</h6>
+                                    <select name="color" class="form-control">
+                                        <option value="" disabled selected>color</option>
+                                        {% for variacion in color_variaciones %}
+                                        <option value="{{ variacion.valor_variacion }}">{{ variacion.valor_variacion|capfirst }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <hr>
+                            {% if single_product.stock <= 0 %}
+                            <h5 class="text-danger">Fuera de stock</h5>
+                            {% else %}
+                                {% if in_cart %}
+                                <a href="{% url 'agregar_carro' single_product.id %}" class="btn btn-success"> <span class="text">Añadir al carrito</span> <i class="fas fa-check"></i> </a>
+                                <a href="{% url 'carrito' %}" class="btn btn-outline-primary"> <span class="text">Ver carrito</span> <i class="fas fa-eye"></i> </a>
+                                {% else %}
+                                <button type="submit" class="btn btn-primary"> <span class="text">Añadir al carrito</span> <i class="fas fa-shopping-cart"></i> </button>
+                                {% endif %}
+                            {% endif %}
+                        </article>
+                    </form>
+                </main>
+            </div>
+        </div>
+        <br>
+
+<div class="row">
+			<div class="col-md-9">
+                <form action="{% url 'subir_resena' single_product.id %}" method="POST">
+                    {% csrf_token %}
+                    <h5>Escribe tu reseña</h5>
+                    <div>
+                        <label>¿Cómo calificarías este producto? </label>
+                        <br>
+                        {% include 'main/messages.html' %}
+                        <div class="rate">
+                            <input type="radio" name="calificacion" id="calificacion10" value="5" required><label for="calificacion10" title="5"></label>
+                            <input type="radio" name="calificacion" id="calificacion9" value="4.5" required><label for="calificacion9" title="4.5" class="half"></label>
+                            <input type="radio" name="calificacion" id="calificaciong8" value="4" required><label for="calificacion8" title="4"></label>
+                            <input type="radio" name="calificacion" id="calificacion7" value="3.5" required><label for="calificacion7" title="3.5" class="half"></label>
+                            <input type="radio" name="calificacion" id="calificacion6" value="3" required><label for="calificacion6" title="3"></label>
+                            <input type="radio" name="calificacion" id="calificacion5" value="2.5" required><label for="calificacion5" title="2.5" class="half"></label>
+                            <input type="radio" name="calificacion" id="calificacion4" value="2" required><label for="calificacion4" title="2"></label>
+                            <input type="radio" name="calificacion" id="calificacion3" value="1.5" required><label for="calificacion3" title="1.5" class="half"></label>
+                            <input type="radio" name="calificacion" id="calificacion2" value="1" required><label for="calificacion2" title="1"></label>
+                            <input type="radio" name="calificacion" id="calificacion1" value="0.5" required><label for="calificacion1" title="0.5" class="half"></label>
+                        </div>
+                        <br>
+                        Título reseña:
+                        <input type="text" class="form-control" name="sujeto">
+                        <br>
+                        Reseña:
+                        <textarea name="resenia" cols="4" class="form-control"></textarea>
+                        <br>
+                        {% if user.is_authenticated %}
+                        <input type="submit" value="subir reseña" class="btn btn-primary">
+                        {% else %}
+                        <p>Debes estar con una sesión iniciada para dejar una reseña <span></span></p>
+                        {% endif %}
+                    </div>
+                </form>
+                
+    <br>
+    <header class="section-heading">
+		<h3>Reseñas compradores </h3>  
+		
+	</header>
+    {% for resenia in resenias %}
+	<article class="box mb-3">
+		<div class="icontext w-100">
+			<img src="{% static 'images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
+			<div class="text">
+				<span class="date text-muted float-md-right">{{resenia.fecha_creado}} </span>  
+				<h6 class="mb-1">{{resenia.user.full_name}} </h6>
+                <div>
+                    <span>
+                        <!--<i class="fas fa-star% if resenia.calificacion == 0.5 }-half-o{% elif resenia.calificacion < 1}-o"></i> --> 
+                        {{resenia.calificacion}}
+                    </span>
+                </div>
+				
+			</div>
+		</div> <!-- icontext.// -->
+		<div class="mt-3">
+            <h4>{{resenia.sujeto}}</h4>
+			<p>
+				{{resenia.resenia}}
+			</p>	
+		</div>
+	</article>
+
+	{% endfor %}
+
+	</div> <!-- col.// -->
+</div> <!-- row.// -->
+
+
+</div> <!-- container .//  -->
+
+    </div>
+</section>
+{% endblock content %}

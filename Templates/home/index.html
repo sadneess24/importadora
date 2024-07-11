@@ -1,0 +1,43 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block titulo %}
+Importadora
+{% endblock titulo %}
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<section class="section-intro padding-y-sm">
+    <div class="container">
+
+        <div class="intro-banner-wrap">
+            <img src="{% static 'images/banners/banner.jpg' %}" class="img-fluid rounded">
+        </div>
+
+    </div>
+</section>
+
+<section class="section-name padding-y-sm">
+    <div class="container">
+
+        <header class="section-heading">
+            <a href="{% url 'tienda' %}" class="btn btn-outline-primary float-right">See all</a>
+            <h3 class="section-title">Popular products</h3>
+        </header>
+
+
+        <div class="row">
+            {% for producto in productos %}
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="{{producto.obtener_url}}" class="img-wrap"> <img src="{{producto.imagen.url}}"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="{{producto.obtener_url}}" class="title">{{producto.nombre_producto}}</a>
+                        <div class="price mt-1">${{producto.precio}}</div>
+                    </figcaption>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+</section>
+{% endblock content %}

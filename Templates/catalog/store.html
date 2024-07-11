@@ -1,0 +1,116 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block tittle %}
+Tienda
+{% endblock tittle %}
+{% block css %}
+<style>
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .col-lg-4 {
+        flex: 0 0 23%;
+        max-width: 23%;
+        margin: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+        background: #fff;
+        border-radius: 10px;
+    }
+
+    .col-lg-3:hover {
+        transform: scale(1.05);
+    }
+
+    .thumbnail {
+        width: 100%;
+        height: auto;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .box-element {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .box-element h6 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        margin: 5px 0;
+        width: 100%;
+    }
+
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .btn-outline-success {
+        border-color: #28a745;
+        color: #28a745;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    h4 {
+        margin-top: 10px;
+        font-size: 24px;
+        color: #333;
+    }
+
+    hr {
+        border-top: 1px solid #ddd;
+        margin: 15px 0;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="row">
+    {% for product in products %}
+    <div class="col-lg-4">
+        {% if product.image %}
+        <img class="thumbnail" src="{{product.image.url}}">
+        {% else %}
+        <img class="thumbnail" src="{% static 'img/placeholder.png' %}">
+        {% endif %}
+        <div class="box-element product">
+            <h4><strong>{{product.name}}</strong></h4>
+            <h6><strong>{{ product.format }}</strong></h6>
+            {% if product.format == 'importado' %}
+            <div class="alert alert-info">
+                <strong>Este producto debe ser importado.</strong>
+            </div>
+            {% elif product.format == 'bodega' %}
+            <div class="alert alert-success">
+                <strong>Este product se encuentra en la bodega.</strong>
+            </div>
+            {% endif %}
+            <hr>
+
+            <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Añadir al carrito</button>
+            <a class="btn btn-outline-success" href="#">Ver</a>
+            <h4 style="display: inline-block;"><strong>CLP:{{product.price|floatformat:0}}</strong></h4>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}
